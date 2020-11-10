@@ -1,0 +1,24 @@
+name: GitHub Tag and Release Cleanup Action
+description: >
+  This removes unused Tags and Releases that are created during the PR process.
+branding:
+  color: blue
+  icon: git-pull-request
+inputs:
+  pr_number:
+    description: PR number to search for
+    required: false
+  branch:
+    description: branch to search for
+    required: false
+  repository:
+    description: Repository to run against
+    required: false
+  regex:
+    description: The regex search pattern for tags to remove, default is `^(.*)?PR${number}(.*)?$`
+    required: false
+
+runs:
+  using: "node12"
+  # main: "index.js"
+  main: "dist/index.js"
