@@ -16,7 +16,7 @@ Toolkit.run(async tools => {
     function basename(path) {
         if (!path) return null;
         return path.split('/').reverse()[0];
-     }
+    }
 
     const {
         branch,
@@ -24,12 +24,13 @@ Toolkit.run(async tools => {
         repository,
         regex,
     } = tools.inputs
-    
-    const searcher = pr_number || basename(branch) || `PR${number}`
+
+    const pr = pr_number || number
+    const searcher = pr || basename(branch)
+
     if (!searcher) {
         tools.exit.failure('This is not a pull_request or delete event, and there was no pr_number, branch, or regex provided!')
     }
-    tools.log.info(`Item to cleanup is: ${searcher}`)
 
     function repoSplit(inputRepo) {
         if (inputRepo) {
@@ -69,15 +70,17 @@ Toolkit.run(async tools => {
                 const idx = tag_name.search(VERSION_RE);
 
                 if (idx !== -1) {
-                    matched_releases.push(id);
+                    matched_releases.push(id)
+                    tools.log.info(`Deleting release id: ${id}`)
                 }
             })
 
             tags.forEach(tag => {
-                const idx = tag.name.search(VERSION_RE);
+                const idx = tag.name.search(VERSION_RE)
 
                 if (idx !== -1) {
-                    matched_tags.push(`tags/${tag.name}`);
+                    matched_tags.push(`tags/${tag.name}`)
+                    tools.log.info(`Deleting tag: ${tag.name}`)
                 }
             })
 
