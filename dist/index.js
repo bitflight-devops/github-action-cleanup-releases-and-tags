@@ -11,7 +11,7 @@ const { Toolkit } = __webpack_require__(7045)
 Toolkit.run(async tools => {
     const { context } = tools
     tools.log.info(`Event type is: ${context.event}`)
-    const { number } = context.payload
+    const { number, ref } = context.payload
 
     function basename(path) {
         if (!path) return null;
@@ -24,9 +24,9 @@ Toolkit.run(async tools => {
         repository,
         regex,
     } = tools.inputs
-
+    const br = branch || ref
     const pr = pr_number || number
-    const searcher = pr || basename(branch)
+    const searcher = pr || basename(br)
 
     if (!searcher) {
         tools.exit.failure('This is not a pull_request or delete event, and there was no pr_number, branch, or regex provided!')
