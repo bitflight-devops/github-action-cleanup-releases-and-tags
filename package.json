@@ -29,7 +29,7 @@
     "lint": "eslint .",
     "test": "NODE_ENV=testing jest",
     "start": "node ./index.js",
-    "build": "ncc build index.js -o dist --minify --source-map --license licenses.txt",
+    "build": "ncc build index.js -o dist --source-map --license licenses.txt",
     "build-debug": "ncc build index.js"
   },
   "jest": {
