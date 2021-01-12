@@ -113,7 +113,9 @@ async function run() {
 
 
 }
+log.info('Starting action')
 run()
+log.info('Ending action')
 
 /***/ }),
 

@@ -106,4 +106,6 @@ async function run() {
 
 
 }
-await run()
+log.info('Starting action')
+run()
+log.info('Ending action')
