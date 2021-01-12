@@ -20,7 +20,7 @@ const MyOctokit = Octokit.plugin(throttling).defaults({
 
       if (options.request.retryCount === 0) {
         // only retries once
-        octokit.log.info(`Retrying after ${retryAfter} seconds!`)
+        octokit.log.debug(`Retrying after ${retryAfter} seconds!`)
         return true
       }
     },
@@ -65,7 +65,7 @@ function repoSplit(inputRepo) {
 
 async function run() {
   try {
-    log.info(`Event type is: ${context.event_name}`)
+    log.debug(`Event type is: ${context.event_name}`)
     const {number, ref} = context.payload
     const branch = getInput('branch')
     const pr_number = getInput('pr_number')
@@ -88,12 +88,12 @@ async function run() {
     const matched_releases = []
     const VERSION_RE = new RegExp(search_re)
 
-    log.info('Collecting repository releases')
+    log.debug('Collecting repository releases')
     const releases = await okit.paginate('GET /repos/:owner/:repo/releases', {
       ...repos
     })
 
-    log.info(
+    log.debug(
       `Scanning ${releases.length} releases matching regex ${VERSION_RE}`
     )
     for (const release of releases) {
@@ -101,15 +101,15 @@ async function run() {
 
       if (tag_name.match(VERSION_RE)) {
         matched_releases.push(id)
-        log.info(`Deleting release id: ${id}`)
+        log.debug(`Deleting release id: ${id}`)
       }
     }
-    log.info(`Found ${matched_releases.length} matching releases`)
+    log.debug(`Found ${matched_releases.length} matching releases`)
     matched_releases.map(release_id => {
       try {
         okit.repos.deleteRelease({...repos, release_id})
       } catch (err) {
-        log.info(`Delete release error: ${err}`)
+        log.debug(`Delete release error: ${err}`)
       }
     })
 
@@ -127,7 +127,7 @@ async function run() {
       try {
         okit.git.deleteRef({...repos, ref: tag_ref})
       } catch (err) {
-        log.info(`Delete ref error: ${err}`)
+        log.debug(`Delete ref error: ${err}`)
       }
     })
   } catch (error) {
