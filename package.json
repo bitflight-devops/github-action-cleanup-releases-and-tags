@@ -8,7 +8,10 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
-    "actions-toolkit": "^4.0.0"
+    "@actions/core": "^1.2.6",
+    "@octokit/action": "^3.1.6",
+    "@octokit/plugin-throttling": "^3.3.4",
+    "octokit-plugin-action-context": "^1.0.0"
   },
   "devDependencies": {
     "@vercel/ncc": "^0.25.1",
