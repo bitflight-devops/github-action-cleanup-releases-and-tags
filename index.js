@@ -1,9 +1,36 @@
+const { Octokit } = require("@octokit/action");
+const { throttling } = require("@octokit/plugin-throttling");
+const { actionContext } = require("octokit-plugin-action-context");
+const {setOutput,getInput,setFailed} = require('@actions/core');
+// const github = require('@actions/github');
 
-const { Toolkit } = require('actions-toolkit')
+const MyOctokit = Octokit.plugin([actionContext,throttling]).defaults({
+    throttle: {
+    onRateLimit: (retryAfter, options, octokit) => {
+      octokit.log.warn(
+        `Request quota exhausted for request ${options.method} ${options.url}`
+      );
 
-Toolkit.run(async tools => {
-    const { context } = tools
-    tools.log.info(`Event type is: ${context.event}`)
+      if (options.request.retryCount === 0) {
+        // only retries once
+        octokit.log.info(`Retrying after ${retryAfter} seconds!`);
+        return true;
+      }
+    },
+    onAbuseLimit: (retryAfter, options, octokit) => {
+      // does not retry, only logs a warning
+      octokit.log.warn(
+        `Abuse detected for request ${options.method} ${options.url}`
+      );
+    },
+  },
+})
+
+const okit = new MyOctokit()
+
+async function run() {
+    const {context,log} = octokit
+    log.info(`Event type is: ${context.event}`)
     const { number, ref } = context.payload
 
     function basename(path) {
@@ -11,18 +38,17 @@ Toolkit.run(async tools => {
         return path.split('/').reverse()[0];
     }
 
-    const {
-        branch,
-        pr_number,
-        repository,
-        regex,
-    } = tools.inputs
+    const branch = getInput('branch')
+    const pr_number = getInput('pr_number')
+    const repository = getInput('repository')
+    const regex = getInput('regex')
+
     const br = branch || ref
     const pr = pr_number || number
     const searcher = pr || basename(br)
 
     if (!searcher) {
-        tools.exit.failure('This is not a pull_request or delete event, and there was no pr_number, branch, or regex provided!')
+        setFailed('This is not a pull_request or delete event, and there was no pr_number, branch, or regex provided!')
     }
 
     function repoSplit(inputRepo) {
@@ -42,7 +68,7 @@ Toolkit.run(async tools => {
             }
         }
 
-        tools.exit.failure('context.repo requires a GITHUB_REPOSITORY environment variable like \'owner/repo\'')
+        setFailed('context.repo requires a GITHUB_REPOSITORY environment variable like \'owner/repo\'')
     }
 
     const repos = repoSplit(repository)
@@ -53,8 +79,8 @@ Toolkit.run(async tools => {
 
     Promise
         .all([
-            tools.github.paginate('GET /repos/:owner/:repo/releases', { ...repos }),
-            tools.github.paginate('GET /repos/:owner/:repo/tags', { ...repos }),
+            okit.paginate('GET /repos/:owner/:repo/releases', { ...repos }),
+            okit.paginate('GET /repos/:owner/:repo/tags', { ...repos }),
         ])
         .then(([releases, tags]) => {
 
@@ -64,7 +90,7 @@ Toolkit.run(async tools => {
 
                 if (idx !== -1) {
                     matched_releases.push(id)
-                    tools.log.info(`Deleting release id: ${id}`)
+                    log.info(`Deleting release id: ${id}`)
                 }
             })
 
@@ -73,16 +99,17 @@ Toolkit.run(async tools => {
 
                 if (idx !== -1) {
                     matched_tags.push(`tags/${tag.name}`)
-                    tools.log.info(`Deleting tag: ${tag.name}`)
+                    log.info(`Deleting tag: ${tag.name}`)
                 }
             })
 
             return Promise
                 .all(
-                    matched_releases.map(release_id => tools.github.repos.deleteRelease({ ...repos, release_id }).catch(err => tools.log.info(`Delete release error: ${err}`))),
-                    matched_tags.map(tag_ref => tools.github.git.deleteRef({ ...repos, ref: tag_ref }).catch(err => tools.log.info(`Delete ref error: ${err}`))),
-                ).catch(err => tools.exit.failure(err))
+                    matched_releases.map(release_id => okit.repos.deleteRelease({ ...repos, release_id }).catch(err => log.info(`Delete release error: ${err}`))),
+                    matched_tags.map(tag_ref => okit.git.deleteRef({ ...repos, ref: tag_ref }).catch(err => log.info(`Delete ref error: ${err}`))),
+                ).catch(err => setFailed(err))
 
-        }).catch(err => tools.exit.failure(err))
+        }).catch(err => setFailed(err))
 
-})
+}
+run()
