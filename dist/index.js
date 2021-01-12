@@ -134,9 +134,9 @@ async function run() {
     setFailed(error.message)
   }
 }
-log.info('Starting action')
+console.log('Starting action')
 run()
-log.info('Ending action')
+console.log('Ending action')
 
 
 /***/ }),
