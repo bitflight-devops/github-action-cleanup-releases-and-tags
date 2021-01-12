@@ -5,11 +5,11 @@ require('./sourcemap-register.js');module.exports =
 /***/ 2932:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __nccwpck_require__) => {
 
-const {Octokit} = __nccwpck_require__(1231)
 const {throttling} = __nccwpck_require__(9968)
-const {getInput, setFailed} = __nccwpck_require__(2186)
+const {getInput, setFailed, log} = __nccwpck_require__(2186)
 const {context} = __nccwpck_require__(5438)
-
+const {Octokit} = __nccwpck_require__(1231)
+console.log('Loading MyOctokit')
 const MyOctokit = Octokit.plugin(throttling).defaults({
   auth: process.env.GITHUB_TOKEN,
   throttle: {
@@ -34,8 +34,8 @@ const MyOctokit = Octokit.plugin(throttling).defaults({
 })
 
 const okit = new MyOctokit()
-const {log} = okit
-log.info('Loading action')
+
+console.log('Loading action')
 function basename(path) {
   if (!path) return null
   return path.split('/').reverse()[0]

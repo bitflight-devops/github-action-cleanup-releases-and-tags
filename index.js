@@ -1,8 +1,8 @@
-const {Octokit} = require('@octokit/action')
 const {throttling} = require('@octokit/plugin-throttling')
-const {getInput, setFailed} = require('@actions/core')
+const {getInput, setFailed, log} = require('@actions/core')
 const {context} = require('@actions/github')
-
+const {Octokit} = require('@octokit/action')
+console.log('Loading MyOctokit')
 const MyOctokit = Octokit.plugin(throttling).defaults({
   auth: process.env.GITHUB_TOKEN,
   throttle: {
@@ -27,8 +27,8 @@ const MyOctokit = Octokit.plugin(throttling).defaults({
 })
 
 const okit = new MyOctokit()
-const {log} = okit
-log.info('Loading action')
+
+console.log('Loading action')
 function basename(path) {
   if (!path) return null
   return path.split('/').reverse()[0]
