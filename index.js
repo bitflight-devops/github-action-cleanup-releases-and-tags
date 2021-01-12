@@ -50,7 +50,7 @@ function repoSplit(inputRepo) {
         }
     }
 
-    setFailed('context.repo requires a GITHUB_REPOSITORY environment variable like \'owner/repo\'')
+    setFailed(`context.repo requires a GITHUB_REPOSITORY environment variable like 'owner/repo'`)
 }
 
 async function run() {
