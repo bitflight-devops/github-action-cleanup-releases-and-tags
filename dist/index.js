@@ -11,6 +11,7 @@ const {getInput, setFailed} = __nccwpck_require__(2186)
 const {context} = __nccwpck_require__(5438)
 
 const MyOctokit = Octokit.plugin(throttling).defaults({
+  auth: process.env.GITHUB_TOKEN,
   throttle: {
     onRateLimit: (retryAfter, options, octokit) => {
       octokit.log.warn(

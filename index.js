@@ -4,6 +4,7 @@ const {getInput, setFailed} = require('@actions/core')
 const {context} = require('@actions/github')
 
 const MyOctokit = Octokit.plugin(throttling).defaults({
+  auth: process.env.GITHUB_TOKEN,
   throttle: {
     onRateLimit: (retryAfter, options, octokit) => {
       octokit.log.warn(

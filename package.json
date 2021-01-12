@@ -44,7 +44,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "yarn run format && yarn run lint && yarn run build && git add dist"
+      "pre-commit": "yarn run format && yarn run lint && yarn run build && git add dist index.js"
     }
   }
 }
