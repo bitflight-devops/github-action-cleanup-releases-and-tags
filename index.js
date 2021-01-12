@@ -28,16 +28,35 @@ const MyOctokit = Octokit.plugin(throttling).defaults({
 const okit = new MyOctokit()
 const { log } = okit
 
+function basename(path) {
+    if (!path) return null;
+    return path.split('/').reverse()[0];
+}
+
+function repoSplit(inputRepo) {
+    if (inputRepo) {
+        const [owner, repo] = inputRepo.split('/')
+        return { owner, repo }
+    }
+    if (process.env.GITHUB_REPOSITORY) {
+        const [owner, repo] = process.env.GITHUB_REPOSITORY.split('/')
+        return { owner, repo }
+    }
+
+    if (context.payload.repository) {
+        return {
+            owner: context.payload.repository.owner.login,
+            repo: context.payload.repository.name
+        }
+    }
+
+    setFailed('context.repo requires a GITHUB_REPOSITORY environment variable like \'owner/repo\'')
+}
+
 async function run() {
     try {
         log.info(`Event type is: ${context.event_name}`)
         const { number, ref } = context.payload
-
-        function basename(path) {
-            if (!path) return null;
-            return path.split('/').reverse()[0];
-        }
-
         const branch = getInput('branch')
         const pr_number = getInput('pr_number')
         const repository = getInput('repository')
@@ -49,26 +68,6 @@ async function run() {
 
         if (!searcher) {
             setFailed('This is not a pull_request or delete event, and there was no pr_number, branch, or regex provided!')
-        }
-
-        function repoSplit(inputRepo) {
-            if (inputRepo) {
-                const [owner, repo] = inputRepo.split('/')
-                return { owner, repo }
-            }
-            if (process.env.GITHUB_REPOSITORY) {
-                const [owner, repo] = process.env.GITHUB_REPOSITORY.split('/')
-                return { owner, repo }
-            }
-
-            if (context.payload.repository) {
-                return {
-                    owner: context.payload.repository.owner.login,
-                    repo: context.payload.repository.name
-                }
-            }
-
-            setFailed('context.repo requires a GITHUB_REPOSITORY environment variable like \'owner/repo\'')
         }
 
         const repos = repoSplit(repository)

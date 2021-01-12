@@ -6,6 +6,11 @@
   "repository": "git@github.com:Broadshield/github-action-cleanup-releases-and-tags.git",
   "author": "Jamie Nelson <jamie@wearsafe.com>",
   "license": "MIT",
+  "keywords": [
+    "GitHub",
+    "Actions",
+    "JavaScript"
+  ],
   "private": true,
   "dependencies": {
     "@actions/core": "^1.2.6",
@@ -21,9 +26,10 @@
     "jest": "^26.6.3"
   },
   "scripts": {
+    "lint": "eslint .",
     "test": "NODE_ENV=testing jest",
     "start": "node ./index.js",
-    "build": "ncc build index.js --minify",
+    "build": "ncc build index.js -o dist --minify --source-map --license licenses.txt",
     "build-debug": "ncc build index.js"
   },
   "jest": {
@@ -37,7 +43,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "yarn run build-debug;git add dist"
+      "pre-commit": "yarn run lint && yarn run build && git add dist"
     }
   }
 }
