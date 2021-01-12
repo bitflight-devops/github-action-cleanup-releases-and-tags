@@ -27,7 +27,7 @@ const MyOctokit = Octokit.plugin(throttling).defaults({
 
 const okit = new MyOctokit()
 const { log } = okit
-
+log.info('Loading action')
 function basename(path) {
     if (!path) return null;
     return path.split('/').reverse()[0];
