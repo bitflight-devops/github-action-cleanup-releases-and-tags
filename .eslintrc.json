@@ -20,6 +20,7 @@
       "import/no-namespace": "off",
       "no-unused-vars": "off",
       "semi": "off",
-      "camelcase": "off"
+      "camelcase": "off",
+      "no-console": "off"
   }
 }
