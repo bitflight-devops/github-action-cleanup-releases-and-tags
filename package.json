@@ -9,10 +9,10 @@
   "private": true,
   "dependencies": {
     "@actions/core": "^1.2.6",
+    "@actions/github": "^4.0.0",
     "@octokit/action": "^3.1.6",
     "@octokit/core": "^3.2.4",
-    "@octokit/plugin-throttling": "^3.3.4",
-    "octokit-plugin-action-context": "^1.0.0"
+    "@octokit/plugin-throttling": "^3.3.4"
   },
   "devDependencies": {
     "@vercel/ncc": "^0.27.0",

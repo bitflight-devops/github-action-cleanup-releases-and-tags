@@ -1,36 +1,36 @@
 const { Octokit } = require("@octokit/action");
 const { throttling } = require("@octokit/plugin-throttling");
-const { actionContext } = require("octokit-plugin-action-context");
-const {setOutput,getInput,setFailed} = require('@actions/core');
-// const github = require('@actions/github');
+const { getInput, setFailed } = require('@actions/core');
+const { context } = require('@actions/github');
 
-const MyOctokit = Octokit.plugin([actionContext,throttling]).defaults({
+const MyOctokit = Octokit.plugin(throttling).defaults({
     throttle: {
-    onRateLimit: (retryAfter, options, octokit) => {
-      octokit.log.warn(
-        `Request quota exhausted for request ${options.method} ${options.url}`
-      );
+        onRateLimit: (retryAfter, options, octokit) => {
+            octokit.log.warn(
+                `Request quota exhausted for request ${options.method} ${options.url}`
+            );
 
-      if (options.request.retryCount === 0) {
-        // only retries once
-        octokit.log.info(`Retrying after ${retryAfter} seconds!`);
-        return true;
-      }
+            if (options.request.retryCount === 0) {
+                // only retries once
+                octokit.log.info(`Retrying after ${retryAfter} seconds!`);
+                return true;
+            }
+        },
+        onAbuseLimit: (retryAfter, options, octokit) => {
+            // does not retry, only logs a warning
+            octokit.log.warn(
+                `Abuse detected for request ${options.method} ${options.url}`
+            );
+        },
     },
-    onAbuseLimit: (retryAfter, options, octokit) => {
-      // does not retry, only logs a warning
-      octokit.log.warn(
-        `Abuse detected for request ${options.method} ${options.url}`
-      );
-    },
-  },
 })
 
 const okit = new MyOctokit()
+const { log } = okit
 
 async function run() {
-    const {context,log} = octokit
-    log.info(`Event type is: ${context.event}`)
+
+    log.info(`Event type is: ${context.event_name}`)
     const { number, ref } = context.payload
 
     function basename(path) {
