@@ -6,8 +6,8 @@ require('./sourcemap-register.js');module.exports =
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __nccwpck_require__) => {
 
 const {throttling} = __nccwpck_require__(9968)
-const {getInput, setFailed, log} = __nccwpck_require__(2186)
-const {context} = __nccwpck_require__(5438)
+const {getInput, setFailed} = __nccwpck_require__(2186)
+const {context, log} = __nccwpck_require__(5438)
 const {Octokit} = __nccwpck_require__(1231)
 console.log('Loading MyOctokit')
 const MyOctokit = Octokit.plugin(throttling).defaults({

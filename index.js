@@ -1,6 +1,6 @@
 const {throttling} = require('@octokit/plugin-throttling')
-const {getInput, setFailed, log} = require('@actions/core')
-const {context} = require('@actions/github')
+const {getInput, setFailed} = require('@actions/core')
+const {context, log} = require('@actions/github')
 const {Octokit} = require('@octokit/action')
 console.log('Loading MyOctokit')
 const MyOctokit = Octokit.plugin(throttling).defaults({
