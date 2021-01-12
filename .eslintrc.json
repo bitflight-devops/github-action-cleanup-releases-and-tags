@@ -2,11 +2,12 @@
 {
   "env": {
       "commonjs": true,
+      "es2021": true,
       "es6": true,
       "jest": true,
       "node": true
   },
-  "extends": "eslint:recommended",
+  "extends": ["plugin:github/recommended","eslint:recommended"],
   "globals": {
       "Atomics": "readonly",
       "SharedArrayBuffer": "readonly"
@@ -15,5 +16,10 @@
       "ecmaVersion": 2018
   },
   "rules": {
+    "eslint-comments/no-use": "off",
+      "import/no-namespace": "off",
+      "no-unused-vars": "off",
+      "semi": "off",
+      "camelcase": "off"
   }
 }

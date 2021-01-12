@@ -16,19 +16,20 @@
     "@actions/core": "^1.2.6",
     "@actions/github": "^4.0.0",
     "@octokit/action": "^3.1.6",
-    "@octokit/core": "^3.2.4",
     "@octokit/plugin-throttling": "^3.3.4"
   },
   "devDependencies": {
     "@vercel/ncc": "^0.27.0",
     "eslint": "^7.17.0",
+    "eslint-plugin-github": "^4.1.1",
     "husky": "^4.3.7",
     "jest": "^26.6.3"
   },
   "scripts": {
-    "lint": "eslint .",
+    "lint": "eslint . --fix",
     "test": "NODE_ENV=testing jest",
     "start": "node ./index.js",
+    "format": "prettier --write index.js",
     "build": "ncc build index.js -o dist --source-map --license licenses.txt",
     "build-debug": "ncc build index.js"
   },
@@ -43,7 +44,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "yarn run lint && yarn run build && git add dist"
+      "pre-commit": "yarn run format && yarn run lint && yarn run build && git add dist"
     }
   }
 }
