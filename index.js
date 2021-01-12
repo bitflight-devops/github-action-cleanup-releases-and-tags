@@ -106,16 +106,16 @@ async function run() {
       }
     })
 
-    log.info('Collecting repository tags')
+    console.log('Collecting repository tags')
     const tags = await okit.paginate('GET /repos/:owner/:repo/tags', {...repos})
-    log.info(`Scanning ${tags.length} tags matching regex ${VERSION_RE}`)
+    console.log(`Scanning ${tags.length} tags matching regex ${VERSION_RE}`)
     for (const tag of tags) {
       if (tag.name.match(VERSION_RE)) {
         matched_tags.push(`tags/${tag.name}`)
-        log.info(`Deleting tag: ${tag.name}`)
+        console.log(`Deleting tag: ${tag.name}`)
       }
     }
-    log.info(`Found ${matched_tags.length} matching tags`)
+    console.log(`Found ${matched_tags.length} matching tags`)
     matched_tags.map(tag_ref => {
       try {
         okit.git.deleteRef({...repos, ref: tag_ref})
