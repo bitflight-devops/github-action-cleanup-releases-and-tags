@@ -84,39 +84,33 @@ async function run() {
     const matched_releases = [];
     const VERSION_RE = new RegExp(search_re);
 
-    Promise
-        .all([
-            okit.paginate('GET /repos/:owner/:repo/releases', { ...repos }),
-            okit.paginate('GET /repos/:owner/:repo/tags', { ...repos }),
-        ])
-        .then(([releases, tags]) => {
+    log.info('Collecting repository releases')
+    const releases = await okit.paginate('GET /repos/:owner/:repo/releases', { ...repos })
 
-            releases.forEach(release => {
-                const { id, tag_name } = release;
-                const idx = tag_name.search(VERSION_RE);
+    log.info(`Scanning ${releases.length} releases matching regex ${VERSION_RE}`)
+    releases.forEach(release => {
+        const { id, tag_name } = release;
 
-                if (idx !== -1) {
-                    matched_releases.push(id)
-                    log.info(`Deleting release id: ${id}`)
-                }
-            })
+        if (tag_name.match(VERSION_RE)) {
+            matched_releases.push(id)
+            log.info(`Deleting release id: ${id}`)
+        }
+    })
+    log.info(`Found ${matched_releases.length} matching releases`)
+    matched_releases.map(release_id => okit.repos.deleteRelease({ ...repos, release_id }).catch(err => log.info(`Delete release error: ${err}`)))
 
-            tags.forEach(tag => {
-                const idx = tag.name.search(VERSION_RE)
+    log.info('Collecting repository tags')
+    const tags = await okit.paginate('GET /repos/:owner/:repo/tags', { ...repos })
+    log.info(`Scanning ${tags.length} tags matching regex ${VERSION_RE}`)
+    tags.forEach(tag => {
+        if (tag.name.match(VERSION_RE)) {
+            matched_tags.push(`tags/${tag.name}`)
+            log.info(`Deleting tag: ${tag.name}`)
+        }
+    })
+    log.info(`Found ${matched_tags.length} matching tags`)
+    matched_tags.map(tag_ref => okit.git.deleteRef({ ...repos, ref: tag_ref }).catch(err => log.info(`Delete ref error: ${err}`)))
 
-                if (idx !== -1) {
-                    matched_tags.push(`tags/${tag.name}`)
-                    log.info(`Deleting tag: ${tag.name}`)
-                }
-            })
-
-            return Promise
-                .all(
-                    matched_releases.map(release_id => okit.repos.deleteRelease({ ...repos, release_id }).catch(err => log.info(`Delete release error: ${err}`))),
-                    matched_tags.map(tag_ref => okit.git.deleteRef({ ...repos, ref: tag_ref }).catch(err => log.info(`Delete ref error: ${err}`))),
-                ).catch(err => setFailed(err))
-
-        }).catch(err => setFailed(err))
 
 }
 run()
