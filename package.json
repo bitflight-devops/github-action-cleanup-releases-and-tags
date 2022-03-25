@@ -1,11 +1,15 @@
 {
-  "name": "github-action-cleanup-releases-and-tags",
+  "name": "@Broadshield/github-action-cleanup-releases-and-tags",
   "version": "1.0.0",
   "description": "This removes unused Tags and Releases that are created during the PR process",
-  "main": "index.js",
+  "main": "dist/index.js",
   "repository": "git@github.com:Broadshield/github-action-cleanup-releases-and-tags.git",
   "author": "Jamie Nelson <jamie@wearsafe.com>",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
   "license": "MIT",
+  "type": "module",
   "keywords": [
     "GitHub",
     "Actions",
@@ -13,23 +17,33 @@
   ],
   "private": true,
   "dependencies": {
-    "@actions/core": "^1.2.6",
-    "@actions/github": "^4.0.0",
-    "@octokit/action": "^3.1.6",
-    "@octokit/plugin-throttling": "^3.3.4"
+    "@actions/core": "^1.6.0",
+    "@actions/github": "^5.0.0",
+    "@octokit/action": "^3.18.0",
+    "@octokit/core": "^3.6.0",
+    "@octokit/plugin-throttling": "^3.6.2",
+    "@octokit/request": "^5.6.3",
+    "@tsconfig/node16": "^1.0.2"
   },
   "devDependencies": {
-    "@vercel/ncc": "^0.27.0",
-    "eslint": "^7.17.0",
-    "eslint-plugin-github": "^4.1.1",
-    "husky": "^4.3.7",
-    "jest": "^26.6.3"
+    "@octokit/core": "^3.6.0",
+    "@octokit/types": "^6.34.0",
+    "@octokit/webhooks-definitions": "^3.67.3",
+    "@octokit/webhooks-types": "^5.5.1",
+    "@types/node": "^17.0.23",
+    "@vercel/ncc": "^0.33.3",
+    "eslint": "^8.11.0",
+    "eslint-plugin-github": "^4.3.6",
+    "husky": "^7.0.4",
+    "jest": "^27.5.1",
+    "typescript": "^4.6.3"
   },
   "scripts": {
     "lint": "eslint . --fix",
     "test": "NODE_ENV=testing jest",
     "start": "node ./index.js",
     "format": "prettier --write index.js",
+    "package": "rimraf lib dist;tsc;ncc build lib/index.js -o dist --source-map --license licenses.txt --target es2021",
     "build": "ncc build index.js -o dist --source-map --license licenses.txt",
     "build-debug": "ncc build index.js"
   },

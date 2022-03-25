@@ -1,0 +1,17 @@
+version: 0.1
+cli:
+  version: 0.8.1-beta
+lint:
+  enabled:
+    - eslint@8.11.0
+    - gitleaks@8.5.1
+    - markdownlint@0.31.1
+    - prettier@2.6.1
+  ignore:
+    - linters: [ALL]
+      paths:
+        - '.git/*'
+        - 'dist/*'
+        - 'node_modules/**/*'
+        - 'lib/*'
+        - '*.lock'
