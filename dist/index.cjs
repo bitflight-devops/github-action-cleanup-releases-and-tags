@@ -9340,7 +9340,15 @@ var oOptions = {
     }
   }
 };
-var okit = new MyOctokit((0, import_utils.getOctokitOptions)((0, import_core.getInput)("github_token") ?? process.env.GITHUB_TOKEN, oOptions));
+var githubToken = { token: (0, import_core.getInput)("github_token", { trimWhitespace: true }) };
+if (githubToken.token === "") {
+  if (process.env.GITHUB_TOKEN) {
+    githubToken.token = process.env.GITHUB_TOKEN;
+  } else {
+    (0, import_core.setFailed)("GITHUB_TOKEN is required");
+  }
+}
+var okit = new MyOctokit((0, import_utils.getOctokitOptions)(githubToken.token, oOptions));
 okit.log.warn("Is this working");
 console.log("Loading action");
 function basename(path) {

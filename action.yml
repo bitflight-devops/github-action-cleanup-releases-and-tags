@@ -17,6 +17,9 @@ inputs:
   regex:
     description: The regex search pattern for tags to remove, default is `^(.*)?PR${number}(.*)?$`
     required: false
+  github_token:
+    description: The GitHub token to use for authentication
+    required: false
 
 runs:
   using: 'node16'

@@ -25,9 +25,16 @@ const oOptions: OctokitOptions = {
     },
   },
 };
-const okit = new MyOctokit(
-  getOctokitOptions(getInput('github_token') ?? process.env.GITHUB_TOKEN, oOptions)
-);
+const githubToken = {token: getInput('github_token', {trimWhitespace: true})};
+if (githubToken.token === '') {
+  if (process.env.GITHUB_TOKEN) {
+    githubToken.token = process.env.GITHUB_TOKEN;
+  } else {
+    setFailed('GITHUB_TOKEN is required');
+  }
+}
+
+const okit = new MyOctokit(getOctokitOptions(githubToken.token, oOptions));
 okit.log.warn('Is this working');
 console.log('Loading action');
 function basename(path: string) {
