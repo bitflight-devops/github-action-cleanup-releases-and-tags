@@ -2,11 +2,9 @@
   "env": {
     "commonjs": true,
     "es2021": true,
-    "es6": true,
     "jest": true,
     "node": true
   },
-  "extends": ["plugin:github/recommended", "eslint:recommended"],
   "globals": {
     "Atomics": "readonly",
     "SharedArrayBuffer": "readonly"
@@ -14,12 +12,34 @@
   "parserOptions": {
     "ecmaVersion": 13
   },
-  "rules": {
-    "eslint-comments/no-use": "off",
-    "import/no-namespace": "off",
-    "no-unused-vars": "off",
-    "semi": "off",
-    "camelcase": "off",
-    "no-console": "off"
-  }
+  "rules": {},
+  "overrides": [
+    {
+      "files": ["*.ts"],
+      "parser": "@typescript-eslint/parser",
+      "plugins": ["simple-import-sort", "import", "node", "@typescript-eslint", "sort-class-members"],
+      "extends": ["plugin:import/typescript", "plugin:github/recommended", "eslint:recommended"],
+      "rules": {
+        "no-unused-vars": "off",
+        "github/array-foreach": "off",
+        "simple-import-sort/imports": "error",
+        "simple-import-sort/exports": "error",
+        "eslint-comments/no-use": "off",
+        "import/no-namespace": "off",
+        "semi": "off",
+        "@typescript-eslint/semi": "error",
+        "camelcase": "off",
+        "no-console": "off",
+        "i18n-text/no-en-text": "off",
+        "i18n-text/no-en": "off"
+      }
+    },
+    {
+      "files": ["lib/*.js"],
+      "rules": {
+        "no-unused-vars": "off",
+        "github/array-foreach": "off"
+      }
+    }
+  ]
 }

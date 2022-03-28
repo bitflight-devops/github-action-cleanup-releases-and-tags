@@ -1,10 +1,10 @@
-import {throttling} from '@octokit/plugin-throttling';
 import {getInput, setFailed} from '@actions/core';
-import {GitHub, getOctokitOptions} from '@actions/github/lib/utils';
 import {context} from '@actions/github';
+import {getOctokitOptions, GitHub} from '@actions/github/lib/utils';
 import {Octokit} from '@octokit/core';
-import {Endpoints} from '@octokit/types';
 import {OctokitOptions} from '@octokit/core/dist-types/types';
+import {throttling} from '@octokit/plugin-throttling';
+import {Endpoints} from '@octokit/types';
 
 console.log('Loading MyOctokit');
 const MyOctokit = GitHub.plugin(throttling);
