@@ -50,10 +50,9 @@
   "scripts": {
     "lint": "eslint . --fix",
     "test": "NODE_ENV=testing jest",
-    "start": "node ./index.js",
-    "format": "prettier --write index.js",
-    "package": "rimraf lib dist;esbuild src/index.ts --bundle --sourcemap --platform=node --outfile=dist/index.cjs --target=node16 --format=cjs",
-    "build-debug": "ncc build index.js"
+    "start": "node ./src/index.js",
+    "format": "prettier --write src/index.js",
+    "package": "rimraf lib dist;esbuild src/index.ts --bundle --sourcemap --platform=node --outfile=dist/index.cjs --target=node16 --format=cjs"
   },
   "jest": {
     "testPathIgnorePatterns": [
