@@ -52,7 +52,7 @@
     "test": "NODE_ENV=testing jest",
     "start": "node ./index.js",
     "format": "prettier --write index.js",
-    "package": "rimraf lib dist;esbuild src/index.ts --sourcemap --platform=node --outfile=dist/index.mjs --target=node16",
+    "package": "rimraf lib dist;esbuild src/index.ts --bundle --sourcemap --platform=node --outfile=dist/index.cjs --target=node16 --format=cjs",
     "build-debug": "ncc build index.js"
   },
   "jest": {

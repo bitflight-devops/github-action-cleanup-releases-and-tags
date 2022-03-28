@@ -21,4 +21,4 @@ inputs:
 runs:
   using: 'node16'
   # main: "index.js"
-  main: 'dist/index.mjs'
+  main: 'dist/index.cjs'
