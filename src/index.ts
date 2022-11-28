@@ -1,147 +1,65 @@
-import {getInput, setFailed} from '@actions/core';
-import {context} from '@actions/github';
-import {getOctokitOptions, GitHub} from '@actions/github/lib/utils';
-import {Octokit} from '@octokit/core';
-import {OctokitOptions} from '@octokit/core/dist-types/types';
-import {throttling} from '@octokit/plugin-throttling';
-import {Endpoints} from '@octokit/types';
+import { isStringObject } from 'node:util/types';
 
-console.log('Loading MyOctokit');
-const MyOctokit = GitHub.plugin(throttling);
-const oOptions: OctokitOptions = {
-  throttle: {
-    onRateLimit: (retryAfter: number, options: any, octokit: Octokit) => {
-      octokit.log.warn(`Request quota exhausted for request ${options.method} ${options.url}`);
+import {
+  context,
+  getGithubToken,
+  getNumberInput,
+  getStringInput,
+  logger,
+  oNumber,
+  oString,
+  repoSplit,
+  setFailed,
+} from '@broadshield/github-actions-core-typed-inputs';
+import type { PullRequest } from '@broadshield/github-actions-octokit-hydrated';
+import { basename, Kondo } from '@broadshield/github-actions-workflow-marie-kondo';
 
-      if (options.request.retryCount === 0) {
-        // only retries once
-        octokit.log.info(`Retrying after ${retryAfter} seconds!`);
-        return true;
-      }
-    },
-    onAbuseLimit: (retryAfter: number, options: any, octokit: Octokit) => {
-      // does not retry, only logs a warning
-      octokit.log.warn(`Abuse detected for request ${options.method} ${options.url}`);
-    },
-  },
+type InputInterface = {
+  [key: string]: string | number | boolean | undefined;
 };
-const githubToken = {token: getInput('github_token', {trimWhitespace: true})};
-if (githubToken.token === '') {
-  if (process.env.GITHUB_TOKEN) {
-    githubToken.token = process.env.GITHUB_TOKEN;
+
+async function run(): Promise<void> {
+  logger.info(`Event type is: ${context.eventName}`);
+  const pull_request: PullRequest | undefined = context.payload?.pull_request
+    ? (context.payload.pull_request as PullRequest)
+    : undefined;
+  const context_number: oNumber = pull_request?.number || context.payload.issue?.number || context.payload['number'];
+  const pl_ref: oString = pull_request?.head.ref || context.ref;
+  const inputs: InputInterface = {};
+  inputs['branch'] = getStringInput('branch', pl_ref);
+  inputs['pr_number'] = getNumberInput('pr_number', context_number);
+  inputs['repository'] = getStringInput('repository', process.env['GITHUB_REPOSITORY']);
+  inputs['regex'] = getStringInput('regex');
+
+  const searcher = [inputs['pr_number'], basename(inputs['branch'])].find(Boolean) || undefined;
+
+  if (searcher === undefined && inputs['regex'] === undefined) {
+    setFailed('This is not a pull_request or delete event, and there was no pr_number, branch, or regex provided!');
+  }
+  const token = getGithubToken();
+  if (isStringObject(token)) {
+    const kondo = new Kondo({ github_token: token, repo: repoSplit(inputs['repository']) });
+
+    const search_re = new RegExp(inputs['regex'] || `^(.*)?${searcher}(.*)?$`);
+    const matched_releases: number[] = await kondo.getFilteredReleaseIdsFromRepo(undefined, {
+      name: search_re,
+    });
+    const matched_tags: string[] = await kondo.getFilteredTagRefsFromRepo(undefined, {
+      ref: search_re,
+    });
+
+    logger.info(`Found ${matched_releases.length} releases and ${matched_tags.length} tags matching ${search_re}`);
+
+    if (matched_releases.length > 0) {
+      await kondo.deleteReleasesByIds(matched_releases);
+    }
+    if (matched_tags.length > 0) {
+      await kondo.deleteTagsByRefs(matched_tags);
+    }
+    logger.info('Done!');
   } else {
-    setFailed('GITHUB_TOKEN is required');
+    setFailed('No token was provided or discovered GITHUB_TOKEN can be set as an environment variable');
   }
 }
 
-const okit = new MyOctokit(getOctokitOptions(githubToken.token, oOptions));
-okit.log.warn('Is this working');
-console.log('Loading action');
-function basename(path: string) {
-  if (!path) return null;
-  return path.split('/').reverse()[0];
-}
-
-function repoSplit(inputRepo: string) {
-  if (inputRepo) {
-    const [owner, repo] = inputRepo.split('/');
-    return {owner, repo};
-  }
-  if (process.env.GITHUB_REPOSITORY) {
-    const [owner, repo] = process.env.GITHUB_REPOSITORY.split('/');
-    return {owner, repo};
-  }
-
-  if (context.payload.repository) {
-    return {
-      owner: context.payload.repository.owner.login,
-      repo: context.payload.repository.name,
-    };
-  }
-
-  setFailed(`context.repo requires a GITHUB_REPOSITORY environment variable like 'owner/repo'`);
-}
-
-async function run() {
-  try {
-    console.log(`Event type is: ${context.eventName}`);
-    const {number, ref} = context.payload;
-    const branch = getInput('branch');
-    const pr_number = getInput('pr_number');
-    const repository = getInput('repository');
-    const regex = getInput('regex');
-
-    const br = branch || ref;
-    const pr = pr_number || number;
-    const searcher = pr || basename(br);
-
-    if (!searcher) {
-      setFailed(
-        'This is not a pull_request or delete event, and there was no pr_number, branch, or regex provided!'
-      );
-    }
-
-    const repos = repoSplit(repository);
-    const search_re: string = regex || `^(.*)?${searcher}(.*)?$`;
-    const matched_tags: string[] = [];
-    const matched_releases: number[] = [];
-    const VERSION_RE: RegExp = new RegExp(search_re);
-
-    console.log('Collecting repository releases');
-    type listUserReposReleasesParameters =
-      Endpoints['GET /repos/{owner}/{repo}/releases']['parameters'];
-    type listUserReposReleases =
-      Endpoints['GET /repos/{owner}/{repo}/releases']['response']['data'];
-
-    const releases: listUserReposReleases = await okit.paginate(
-      'GET /repos/:owner/:repo/releases',
-      {
-        ...repos,
-      } as listUserReposReleasesParameters
-    );
-
-    console.log(`Scanning ${releases.length} releases matching regex ${VERSION_RE}`);
-    for (const release of releases) {
-      const {id, tag_name} = release;
-
-      if (tag_name.match(VERSION_RE)) {
-        matched_releases.push(id);
-        console.log(`Deleting release id: ${id}`);
-      }
-    }
-    console.log(`Found ${matched_releases.length} matching releases`);
-    matched_releases.forEach(async (release_id) => {
-      try {
-        await okit.rest.repos.deleteRelease({repo: repos!.repo, owner: repos!.owner, release_id});
-      } catch (err) {
-        console.log(`Delete release error: ${err}`);
-      }
-    });
-    type listUserReposTagsData = Endpoints['GET /repos/{owner}/{repo}/tags']['response']['data'];
-
-    console.log('Collecting repository tags');
-    const tags: listUserReposTagsData = await okit.paginate('GET /repos/:owner/:repo/tags', {
-      ...repos,
-    });
-    console.log(`Scanning ${tags.length} tags matching regex ${VERSION_RE}`);
-    for (const tag of tags) {
-      if (tag.name.match(VERSION_RE)) {
-        matched_tags.push(`tags/${tag.name}`);
-        console.log(`Deleting tag: ${tag.name}`);
-      }
-    }
-    console.log(`Found ${matched_tags.length} matching tags`);
-    matched_tags.forEach(async (tag_ref) => {
-      try {
-        await okit.rest.git.deleteRef({repo: repos!.repo, owner: repos!.owner, ref: tag_ref});
-      } catch (err) {
-        console.log(`Delete ref error: ${err}`);
-      }
-    });
-  } catch (error: any) {
-    setFailed(error.message ?? error);
-  }
-}
-console.log('Starting action');
-run();
-console.log('Ending action');
+await run();

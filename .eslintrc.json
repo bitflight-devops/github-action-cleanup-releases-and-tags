@@ -1,44 +1,219 @@
 {
-  "env": {
-    "commonjs": true,
-    "es2021": true,
-    "jest": true,
-    "node": true
-  },
-  "globals": {
-    "Atomics": "readonly",
-    "SharedArrayBuffer": "readonly"
-  },
-  "parserOptions": {
-    "ecmaVersion": 13
-  },
-  "rules": {},
+  "root": true,
+  "plugins": [
+    "simple-import-sort",
+    "import",
+    "jest",
+    "jest-async",
+    "@typescript-eslint",
+    "optimize-regex",
+    "promise",
+    "node"
+  ],
   "overrides": [
     {
-      "files": ["*.ts"],
-      "parser": "@typescript-eslint/parser",
-      "plugins": ["simple-import-sort", "import", "node", "@typescript-eslint", "sort-class-members"],
-      "extends": ["plugin:import/typescript", "plugin:github/recommended", "eslint:recommended"],
+      "plugins": ["actions"],
+      "files": [".github/workflows/*.{yml,yaml}"],
+      "processor": "actions/actions"
+    },
+    {
+      "files": ["*.ts", "*.tsx"],
+      "extends": [
+        "plugin:promise/recommended",
+        "plugin:no-use-extend-native/recommended",
+        "plugin:jest/recommended",
+        "eslint:recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:@typescript-eslint/recommended-requiring-type-checking",
+        "airbnb-base",
+        "plugin:import/errors",
+        "plugin:import/warnings",
+        "plugin:import/typescript",
+        "plugin:sonarjs/recommended",
+        "plugin:unicorn/recommended",
+        "plugin:optimize-regex/recommended"
+      ],
+      "parserOptions": {
+        "project": ["tsconfig.json"]
+      },
+      "settings": {
+        "import/parsers": {
+          "@typescript-eslint/parser": [".ts", ".tsx"]
+        },
+        "import/resolver": {
+          "typescript": {
+            "project": "tsconfig.json",
+            "alwaysTryTypes": true // always try to resolve types under `<root>@types` directory even it doesn"t contain any source code, like `@types/unist`
+          }
+        }
+      },
       "rules": {
-        "no-unused-vars": "off",
-        "github/array-foreach": "off",
-        "simple-import-sort/imports": "error",
-        "simple-import-sort/exports": "error",
-        "eslint-comments/no-use": "off",
-        "import/no-namespace": "off",
-        "semi": "off",
-        "@typescript-eslint/semi": "error",
+        "dot-notation": "off",
+        "@typescript-eslint/dot-notation": [
+          "warn",
+          {
+            "allowIndexSignaturePropertyAccess": true
+          }
+        ],
+        "no-redeclare": "off",
+        "@typescript-eslint/no-redeclare": "error",
+        "unicorn/consistent-destructuring": "off",
+        "@typescript-eslint/no-unsafe-member-access": "off",
+        "@typescript-eslint/no-unsafe-call": "off",
+        "node/no-missing-import": "off",
+        "node/no-empty-function": "off",
+        "node/no-unsupported-features/es-syntax": "off",
+        "node/no-missing-require": "off",
+        "node/shebang": "off",
+        "no-use-before-define": "off",
+        "@typescript-eslint/no-use-before-define": "off",
+        "node/no-unpublished-import": "off",
+        "@typescript-eslint/no-unsafe-assignment": "off",
+        "@typescript-eslint/no-var-requires": "off",
+        "@typescript-eslint/ban-ts-comment": "off",
+        "@typescript-eslint/no-explicit-any": "off",
+        "jest-async/expect-return": "error",
+        "operator-linebreak": ["error", "after"],
+        "@typescript-eslint/array-type": "error",
+        "@typescript-eslint/await-thenable": "error",
+        "@typescript-eslint/consistent-type-assertions": "error",
+        "@typescript-eslint/explicit-function-return-type": [
+          "error",
+          {
+            "allowExpressions": true
+          }
+        ],
+        "@typescript-eslint/explicit-member-accessibility": [
+          "error",
+          {
+            "accessibility": "no-public"
+          }
+        ],
+        "import/no-unresolved": "error",
+        "@typescript-eslint/func-call-spacing": ["error", "never"],
+        "@typescript-eslint/lines-between-class-members": ["error"],
+        "@typescript-eslint/no-require-imports": "error",
+        "@typescript-eslint/no-unnecessary-qualifier": "error",
+        "@typescript-eslint/no-unnecessary-type-assertion": "error",
+        "@typescript-eslint/no-unused-vars": [
+          "error",
+          {
+            "argsIgnorePattern": "^_"
+          }
+        ],
+        "@typescript-eslint/no-useless-constructor": "error",
+        "@typescript-eslint/prefer-for-of": "warn",
+        "@typescript-eslint/prefer-function-type": "warn",
+        "@typescript-eslint/prefer-includes": "error",
+        "@typescript-eslint/prefer-string-starts-ends-with": "error",
+        "@typescript-eslint/promise-function-async": "error",
+        "@typescript-eslint/require-array-sort-compare": "error",
+        "@typescript-eslint/restrict-plus-operands": "error",
+        "@typescript-eslint/restrict-template-expressions": "off",
+        "@typescript-eslint/semi": ["error", "always"],
+
+        "@typescript-eslint/strict-boolean-expressions": "off",
+        "@typescript-eslint/type-annotation-spacing": "error",
+        "@typescript-eslint/unbound-method": "error",
+        "no-return-await": "off",
+        "@typescript-eslint/return-await": "warn",
+        "quote-props": "off",
         "camelcase": "off",
+        "consistent-return": "off",
+        "eslint-comments/no-use": "off",
+        "github/no-then": "off",
+        "import/extensions": "off",
+        "import/first": "error",
+        "import/newline-after-import": "error",
+        "import/no-duplicates": "error",
+        "import/no-namespace": "off",
+        "import/prefer-default-export": "off",
+        "import/prefer-default-import": "off",
+        "lines-between-class-members": "off",
         "no-console": "off",
-        "i18n-text/no-en-text": "off",
-        "i18n-text/no-en": "off"
+        "no-plusplus": "off",
+        "no-shadow": "off",
+        "no-unused-vars": "off",
+        "no-restricted-syntax": "off",
+        "one-var": "off",
+        "semi": "off",
+        "simple-import-sort/exports": "error",
+        "simple-import-sort/imports": "error",
+        "sort-imports": "off",
+        "sonarjs/cognitive-complexity": "off",
+        "space-before-function-paren": "off",
+        "unicorn/filename-case": "off",
+        "unicorn/import": "off",
+        "unicorn/import-style": "off",
+        "unicorn/no-null": "off",
+        "unicorn/prefer-module": "off",
+        "unicorn/prefer-top-level-await": "off",
+        "unicorn/prevent-abbreviations": "off",
+        "@typescript-eslint/no-array-constructor": "error",
+        "@typescript-eslint/no-empty-interface": "error",
+        "@typescript-eslint/no-extraneous-class": "error",
+        "@typescript-eslint/no-for-in-array": "error",
+        "@typescript-eslint/no-inferrable-types": "error",
+        "@typescript-eslint/no-misused-new": "error",
+        "@typescript-eslint/no-namespace": "error",
+        "@typescript-eslint/no-non-null-assertion": "warn",
+        "@typescript-eslint/no-unsafe-argument": "off"
+      },
+      "globals": {
+        "NodeJS": true
+      },
+      "env": {
+        "browser": false,
+        "node": true,
+        "es6": true,
+        "es2022": true,
+        "jest/globals": true,
+        "jest": true
       }
     },
     {
-      "files": ["lib/*.js"],
+      "files": ["*.js", "*.jsx"],
+      "extends": ["plugin:jest/recommended"],
+      "rules": {}
+    },
+    {
+      "files": ["*.spec.ts", "*.spec.tsx", "*.spec.js", "*.spec.jsx"],
+      "settings": {
+        "import/parsers": {
+          "@typescript-eslint/parser": [".ts", ".tsx"]
+        },
+        "import/resolver": {
+          "typescript": {
+            "project": "tsconfig.json",
+            "alwaysTryTypes": true // always try to resolve types under `<root>@types` directory even it doesn"t contain any source code, like `@types/unist`
+          }
+        }
+      },
+      "env": {
+        "node": true,
+        "jest": true
+      },
       "rules": {
-        "no-unused-vars": "off",
-        "github/array-foreach": "off"
+        "dot-notation": "off",
+        "@typescript-eslint/dot-notation": [
+          "warn",
+          {
+            "allowIndexSignaturePropertyAccess": true
+          }
+        ],
+        "no-redeclare": "off",
+        "@typescript-eslint/no-redeclare": "error",
+        "unicorn/consistent-destructuring": "off",
+        "@typescript-eslint/no-explicit-any": "off",
+        "import/no-extraneous-dependencies": "off",
+        "@typescript-eslint/no-unsafe-argument": "off",
+        "@typescript-eslint/no-unsafe-return": "off",
+        "@typescript-eslint/no-unused-vars": [
+          "error",
+          {
+            "argsIgnorePattern": "^_"
+          }
+        ]
       }
     }
   ]

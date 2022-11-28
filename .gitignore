@@ -6,7 +6,8 @@ yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
 lib/
-node_modules
+/node_modules
+/.yarn/cache/**/*
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
