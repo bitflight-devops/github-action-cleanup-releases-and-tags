@@ -8920,9 +8920,7 @@ async function run() {
   inputs["regex"] = k0("regex");
   const searcher = [inputs["pr_number"], cm(inputs["branch"])].find(Boolean) || void 0;
   if (searcher === void 0 && inputs["regex"] === void 0) {
-    da(
-      "This is not a pull_request or delete event, and there was no pr_number, branch, or regex provided!"
-    );
+    da("This is not a pull_request or delete event, and there was no pr_number, branch, or regex provided!");
   }
   const token = po();
   if (isStringObject(token)) {
@@ -8934,9 +8932,7 @@ async function run() {
     const matched_tags = await kondo.getFilteredTagRefsFromRepo(void 0, {
       ref: search_re
     });
-    F1.info(
-      `Found ${matched_releases.length} releases and ${matched_tags.length} tags matching ${search_re}`
-    );
+    F1.info(`Found ${matched_releases.length} releases and ${matched_tags.length} tags matching ${search_re}`);
     if (matched_releases.length > 0) {
       await kondo.deleteReleasesByIds(matched_releases);
     }
@@ -8945,9 +8941,7 @@ async function run() {
     }
     F1.info("Done!");
   } else {
-    da(
-      "No token was provided or discovered GITHUB_TOKEN can be set as an environment variable"
-    );
+    da("No token was provided or discovered GITHUB_TOKEN can be set as an environment variable");
   }
 }
 await run();

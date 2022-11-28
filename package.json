@@ -2,7 +2,7 @@
   "name": "@broadshield/github-action-cleanup-releases-and-tags",
   "version": "1.0.0",
   "description": "This removes unused Tags and Releases that are created during the PR process",
-  "main": "dist/index.js",
+  "main": "dist/index.mjs",
   "repository": "git@github.com:Broadshield/github-action-cleanup-releases-and-tags.git",
   "author": "Jamie Nelson <jamie@wearsafe.com>",
   "license": "MIT",
