@@ -83,15 +83,11 @@
     "test": "NODE_ENV=testing jest",
     "format:all": "prettier --write .",
     "format": "pretty-quick",
+    "typecheck": "tsc --noEmit",
     "build": "rimraf lib dist;esbuild src/index.ts --bundle --sourcemap --platform=node --outfile=dist/index.cjs --target=node16 --format=cjs"
   },
   "exports": {
     ".": "./dist/index.cjs"
-  },
-  "typesVersions": {
-    "*": {
-      "index.d.ts": ["dist/index.d.ts"]
-    }
   },
   "packageManager": "yarn@3.3.0"
 }

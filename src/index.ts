@@ -11,8 +11,8 @@ import {
   repoSplit,
   setFailed,
 } from '@broadshield/github-actions-core-typed-inputs';
-import type { PullRequest } from '@broadshield/github-actions-octokit-hydrated';
 import { basename, Kondo } from '@broadshield/github-actions-workflow-marie-kondo';
+import type { PullRequest } from '@octokit/webhooks-types/schema';
 
 type InputInterface = {
   [key: string]: string | number | boolean | undefined;
