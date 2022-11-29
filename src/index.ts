@@ -36,7 +36,7 @@ async function run(): Promise<void> {
   if (searcher === undefined && inputs['regex'] === undefined) {
     setFailed('This is not a pull_request or delete event, and there was no pr_number, branch, or regex provided!');
   }
-  const token = getGithubToken();
+  const token = getGithubToken('github_token', process.env['GITHUB_TOKEN'] ?? '');
   if (isStringObject(token)) {
     const kondo = new Kondo({ github_token: token, repo: repoSplit(inputs['repository']) });
 
