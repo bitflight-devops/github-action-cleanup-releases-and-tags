@@ -62,4 +62,10 @@ async function run(): Promise<void> {
   }
 }
 
-await run();
+run().catch((error) => {
+  if (error instanceof Error) {
+    setFailed(error);
+  } else {
+    setFailed(JSON.stringify(error));
+  }
+});

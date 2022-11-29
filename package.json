@@ -1,8 +1,9 @@
 {
   "name": "@broadshield/github-action-cleanup-releases-and-tags",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "This removes unused Tags and Releases that are created during the PR process",
-  "main": "dist/index.mjs",
+  "main": "dist/index.cjs",
+  "type": "commonjs",
   "repository": "git@github.com:Broadshield/github-action-cleanup-releases-and-tags.git",
   "author": "Jamie Nelson <jamie@wearsafe.com>",
   "license": "MIT",
@@ -10,11 +11,9 @@
   "files": ["dist", "action.yml"],
   "private": true,
   "dependencies": {
-    "@broadshield/github-actions-core-typed-inputs": "^1.0.1",
-    "@broadshield/github-actions-octokit-hydrated": "^1.0.1",
-    "@broadshield/github-actions-workflow-marie-kondo": "^1.0.1",
-    "esbuild": "^0.15.16",
-    "rimraf": "^3.0.2"
+    "@broadshield/github-actions-core-typed-inputs": "1.2.0",
+    "@broadshield/github-actions-octokit-hydrated": "1.2.0",
+    "@broadshield/github-actions-workflow-marie-kondo": "1.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7",
@@ -26,7 +25,7 @@
     "@octokit/types": "^8.0.0",
     "@octokit/webhooks-definitions": "^3.67.3",
     "@octokit/webhooks-types": "^6.7.0",
-    "@tsconfig/node16-strictest-esm": "^1.0.3",
+    "@tsconfig/node16-strictest": "^1.0.3",
     "@types/babel__core": "^7",
     "@types/babel__preset-env": "^7",
     "@types/node": "^18.11.9",
@@ -38,6 +37,7 @@
     "@typescript-eslint/typescript-estree": "latest",
     "babel-plugin-istanbul": "^6.1.1",
     "dotenv": "^16.0.3",
+    "esbuild": "^0.15.16",
     "eslint": "^8.28.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^8.5.0",
@@ -72,6 +72,7 @@
     "prettier-plugin-organize-imports": "^3.2.1",
     "prettier-plugin-sh": "^0.12.8",
     "pretty-quick": "^3.1.3",
+    "rimraf": "^3.0.2",
     "ts-jest": "^29.0.3",
     "ts-node": "^10.9.1",
     "typescript": "~4.9.3",
@@ -82,7 +83,7 @@
     "test": "NODE_ENV=testing jest",
     "format:all": "prettier --write .",
     "format": "pretty-quick",
-    "build": "rimraf lib dist;esbuild src/index.ts --bundle --sourcemap --platform=node --outfile=dist/index.mjs --target=node16 --format=esm"
+    "build": "rimraf lib dist;esbuild src/index.ts --bundle --sourcemap --platform=node --outfile=dist/index.cjs --target=node16 --format=cjs"
   },
   "exports": {
     ".": "./dist/index.cjs"

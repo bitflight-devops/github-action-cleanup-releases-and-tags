@@ -1,12 +1,13 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
-  "display": "lib - Node 16 + Strictest - esm",
-  "extends": "@tsconfig/node16-strictest-esm/tsconfig.json",
+  "display": "lib - Node 16 + Strictest",
+  "extends": "@tsconfig/node16-strictest/tsconfig.json",
   "compileOnSave": false,
   "compilerOptions": {
     "rootDir": ".",
     "sourceMap": true,
-    "module": "Node16",
+    "module": "esnext",
+    "moduleResolution": "node",
     "declaration": false,
     "importHelpers": true,
     "strictNullChecks": true,
