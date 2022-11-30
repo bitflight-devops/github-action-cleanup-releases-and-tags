@@ -1,0 +1,31 @@
+name: 🧼 Pull Request - Cleanup Tags and Releases
+
+on:
+  delete:
+  pull_request:
+    types: [closed]
+  workflow_dispatch:
+    inputs:
+      regex:
+        description: 'Regex to search by'
+        required: false
+      pr_number:
+        description: 'PR Number to search by'
+        required: false
+
+jobs:
+  cleanup:
+    name: Cleanup Tags and Releases
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          path: github-action-cleanup-releases-and-tags
+          fetch-depth: 0
+      - name: Remove unused releases and tags
+        uses: ${{github.workspace}}/github-action-cleanup-releases-and-tags
+        with:
+          github_token: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN || giithub.token }}
+          regex: ${{ github.event.inputs.regex }}
+          pr_number: ${{ github.event.inputs.pr_number }}
