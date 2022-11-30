@@ -26,6 +26,6 @@ jobs:
       - name: Remove unused releases and tags
         uses: ${{github.workspace}}/github-action-cleanup-releases-and-tags
         with:
-          github_token: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN || giithub.token }}
+          github_token: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN || github.token }}
           regex: ${{ github.event.inputs.regex }}
           pr_number: ${{ github.event.inputs.pr_number }}
