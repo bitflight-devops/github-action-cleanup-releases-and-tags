@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
     inputs:
       regex:
-        description: 'Regex to search by i.e: [v]?[0-9]\.[0-9]\.[0-9]-(.*)'
+        description: Regex to search by i.e:<br /> <code>[v]?[0-9]\.[0-9]\.[0-9]-(.*)</code>
         required: false
       pr_number:
         description: 'PR Number to search by'
@@ -26,6 +26,6 @@ jobs:
       - name: Remove unused releases and tags
         uses: ./github-action-cleanup-releases-and-tags
         with:
-          github_token: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
+          github_token: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN || secrets.GITHUB_TOKEN }}
           regex: ${{ github.event.inputs.regex }}
           pr_number: ${{ github.event.inputs.pr_number }}

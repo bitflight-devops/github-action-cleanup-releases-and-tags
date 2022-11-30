@@ -7,15 +7,8 @@
   "repository": "git@github.com:Broadshield/github-action-cleanup-releases-and-tags.git",
   "author": "Jamie Nelson <jamie@wearsafe.com>",
   "license": "MIT",
-  "keywords": [
-    "GitHub",
-    "Actions",
-    "JavaScript"
-  ],
-  "files": [
-    "dist",
-    "action.yml"
-  ],
+  "keywords": ["GitHub", "Actions", "JavaScript"],
+  "files": ["dist", "action.yml"],
   "private": true,
   "engines": {
     "node": ">=16.18.1"
@@ -24,9 +17,9 @@
     "eslint-plugin-import": "npm:eslint-plugin-i@^2.26.0-2"
   },
   "dependencies": {
-    "@broadshield/github-actions-core-typed-inputs": "1.2.0",
-    "@broadshield/github-actions-octokit-hydrated": "1.2.0",
-    "@broadshield/github-actions-workflow-marie-kondo": "1.2.0",
+    "@broadshield/github-actions-core-typed-inputs": "1.2.1",
+    "@broadshield/github-actions-octokit-hydrated": "1.2.1",
+    "@broadshield/github-actions-workflow-marie-kondo": "1.2.1",
     "tslib": "^2.4.1"
   },
   "devDependencies": {
