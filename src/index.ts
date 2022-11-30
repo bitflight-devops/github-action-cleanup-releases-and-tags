@@ -43,10 +43,13 @@ async function run(): Promise<void> {
     const matched_releases: number[] = await kondo.getFilteredReleaseIdsFromRepo(undefined, {
       name: search_re,
     });
+    logger.debug(`matched_releases: ${JSON.stringify(matched_releases)}`);
     core.setOutput('matched_releases', JSON.stringify(matched_releases));
+
     const matched_tags: string[] = await kondo.getFilteredTagRefsFromRepo(undefined, {
       ref: search_re,
     });
+    logger.debug(`matched_tags: ${JSON.stringify(matched_tags)}`);
     core.setOutput('matched_tags', JSON.stringify(matched_tags));
 
     core.notice(`Found ${matched_releases.length} releases and ${matched_tags.length} tags matching ${search_re}`);

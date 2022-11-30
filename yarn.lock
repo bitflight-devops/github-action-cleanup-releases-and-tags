@@ -1459,9 +1459,9 @@ __metadata:
     "@babel/core": ^7
     "@babel/preset-env": ^7.20.2
     "@babel/preset-typescript": ^7.18.6
-    "@broadshield/github-actions-core-typed-inputs": 1.2.1
+    "@broadshield/github-actions-core-typed-inputs": 1.2.2
     "@broadshield/github-actions-octokit-hydrated": 1.2.1
-    "@broadshield/github-actions-workflow-marie-kondo": 1.2.1
+    "@broadshield/github-actions-workflow-marie-kondo": 1.2.2
     "@commitlint/cz-commitlint": ^17.3.0
     "@jest/globals": ^29.3.1
     "@jest/types": ^29.3.1
@@ -1534,20 +1534,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@broadshield/github-actions-core-typed-inputs@npm:1.2.0":
-  version: 1.2.0
-  resolution: "@broadshield/github-actions-core-typed-inputs@npm:1.2.0"
-  dependencies:
-    "@actions/core": 1.10.0
-    "@actions/github": 5.1.1
-    "@octokit/auth-token": 3.0.2
-    "@octokit/request": 6.2.2
-    "@octokit/types": 8.0.0
-    tslib: 2.4.1
-  checksum: 9af16de392e29dee2e9be80741c30f0925bcea14e21639116cfea8a832bfd9f7c0f517b9a62ca52e909f0d70ac8925a4b97fc87abcc74bf03d29752f1345b232
-  languageName: node
-  linkType: hard
-
 "@broadshield/github-actions-core-typed-inputs@npm:1.2.1":
   version: 1.2.1
   resolution: "@broadshield/github-actions-core-typed-inputs@npm:1.2.1"
@@ -1562,25 +1548,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@broadshield/github-actions-octokit-hydrated@npm:1.2.0":
-  version: 1.2.0
-  resolution: "@broadshield/github-actions-octokit-hydrated@npm:1.2.0"
+"@broadshield/github-actions-core-typed-inputs@npm:1.2.2":
+  version: 1.2.2
+  resolution: "@broadshield/github-actions-core-typed-inputs@npm:1.2.2"
   dependencies:
     "@actions/core": 1.10.0
     "@actions/github": 5.1.1
-    "@broadshield/github-actions-core-typed-inputs": 1.2.0
     "@octokit/auth-token": 3.0.2
-    "@octokit/core": 4.1.0
-    "@octokit/graphql": 5.0.4
-    "@octokit/graphql-schema": 12.31.0
-    "@octokit/plugin-paginate-rest": 5.0.1
-    "@octokit/plugin-rest-endpoint-methods": 6.7.0
-    "@octokit/plugin-throttling": 4.3.2
     "@octokit/request": 6.2.2
-    "@octokit/rest": 19.0.5
     "@octokit/types": 8.0.0
     tslib: 2.4.1
-  checksum: ddecc606ab1db1bbb4e9caa42564e21ad4c58a904c649039dd13cfa3ac5de0d481fd929d1869570e639947866726ad643b6de22ceac9940f6833ba778693826c
+  checksum: 66c47d7cfa3145606ec1160858ebc7528e2532bfa102f1a49827046d42cfa81079e49bfd6902fe6c60ff47a3fc92528ba5b2ee04aa3636600e1d645fc043c3ca
   languageName: node
   linkType: hard
 
@@ -1606,18 +1584,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@broadshield/github-actions-workflow-marie-kondo@npm:1.2.1":
-  version: 1.2.1
-  resolution: "@broadshield/github-actions-workflow-marie-kondo@npm:1.2.1"
+"@broadshield/github-actions-workflow-marie-kondo@npm:1.2.2":
+  version: 1.2.2
+  resolution: "@broadshield/github-actions-workflow-marie-kondo@npm:1.2.2"
   dependencies:
     "@actions/core": 1.10.0
     "@actions/github": 5.1.1
-    "@broadshield/github-actions-core-typed-inputs": 1.2.1
-    "@broadshield/github-actions-octokit-hydrated": 1.2.0
+    "@broadshield/github-actions-core-typed-inputs": 1.2.2
+    "@broadshield/github-actions-octokit-hydrated": 1.2.1
     "@octokit/auth-token": 3.0.2
     "@octokit/core": 4.1.0
     "@octokit/graphql": 5.0.4
-    "@octokit/graphql-schema": 12.31.0
+    "@octokit/graphql-schema": 12.32.0
     "@octokit/plugin-paginate-rest": 5.0.1
     "@octokit/plugin-rest-endpoint-methods": 6.7.0
     "@octokit/plugin-throttling": 4.3.2
@@ -1625,7 +1603,7 @@ __metadata:
     "@octokit/rest": 19.0.5
     "@octokit/types": 8.0.0
     tslib: 2.4.1
-  checksum: 65fb85ea94be2277749ed8505995523187c4f0cb7e63ea534f12176fe1747d38941edfc45e327b8669416eeee62d2b20a1ceff8456555e1712a66ac5b4c4be47
+  checksum: f228a29a629c847e9999ff867d89b8d9c1fbd7829ca314913f67fc64f6c55816f86c19a1892b7fc5d5af8920d175b8edf262a3e1a595a7fc84977210fe2ae2a9
   languageName: node
   linkType: hard
 
@@ -2581,6 +2559,16 @@ __metadata:
     graphql: ^16.0.0
     graphql-tag: ^2.10.3
   checksum: ef3cce78bef98b1f5df58383a8b52256ac8e3fbb032ada2e1d78e3c59721544d624d56fa7dc671c86e5ae77938d8de027ea884080ecfbaae5a158b6a16c96fbf
+  languageName: node
+  linkType: hard
+
+"@octokit/graphql-schema@npm:12.32.0":
+  version: 12.32.0
+  resolution: "@octokit/graphql-schema@npm:12.32.0"
+  dependencies:
+    graphql: ^16.0.0
+    graphql-tag: ^2.10.3
+  checksum: 2be2b344ebb4ede587efe3752cab3ae807bf153375e578d1563d7a6299947e966c5f0162b622f6363b082e8775076ad92e78eccdd79a6dcf9d260c2994ceb290
   languageName: node
   linkType: hard
 
