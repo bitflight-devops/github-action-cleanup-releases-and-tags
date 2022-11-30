@@ -20,7 +20,6 @@ inputs:
   github_token:
     description: The GitHub token to use for authentication
     required: false
-    default: ${{ secrets.GITHUB_TOKEN }}
 
 runs:
   using: 'node16'
