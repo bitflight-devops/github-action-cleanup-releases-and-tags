@@ -1,7 +1,6 @@
-import { isStringObject } from 'node:util/types';
-
 import {
   context,
+  core,
   getGithubToken,
   getNumberInput,
   getStringInput,
@@ -37,18 +36,20 @@ async function run(): Promise<void> {
     setFailed('This is not a pull_request or delete event, and there was no pr_number, branch, or regex provided!');
   }
   const token = getGithubToken('github_token', process.env['GITHUB_TOKEN'] ?? '');
-  if (isStringObject(token)) {
+  if (token) {
     const kondo = new Kondo({ github_token: token, repo: repoSplit(inputs['repository']) });
 
     const search_re = new RegExp(inputs['regex'] || `^(.*)?${searcher}(.*)?$`);
     const matched_releases: number[] = await kondo.getFilteredReleaseIdsFromRepo(undefined, {
       name: search_re,
     });
+    core.setOutput('matched_releases', JSON.stringify(matched_releases));
     const matched_tags: string[] = await kondo.getFilteredTagRefsFromRepo(undefined, {
       ref: search_re,
     });
+    core.setOutput('matched_tags', JSON.stringify(matched_tags));
 
-    logger.info(`Found ${matched_releases.length} releases and ${matched_tags.length} tags matching ${search_re}`);
+    core.notice(`Found ${matched_releases.length} releases and ${matched_tags.length} tags matching ${search_re}`);
 
     if (matched_releases.length > 0) {
       await kondo.deleteReleasesByIds(matched_releases);
