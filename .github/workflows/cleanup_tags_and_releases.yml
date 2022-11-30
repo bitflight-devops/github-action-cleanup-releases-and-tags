@@ -24,7 +24,7 @@ jobs:
           path: github-action-cleanup-releases-and-tags
           fetch-depth: 0
       - name: Remove unused releases and tags
-        uses: ${{github.workspace}}/github-action-cleanup-releases-and-tags
+        uses: ./github-action-cleanup-releases-and-tags
         with:
           github_token: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN || github.token }}
           regex: ${{ github.event.inputs.regex }}
