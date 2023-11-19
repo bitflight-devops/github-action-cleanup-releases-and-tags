@@ -48,7 +48,7 @@
     "babel-plugin-istanbul": "^6.1.1",
     "commitizen": "4.2.5",
     "dotenv": "^16.0.3",
-    "esbuild": "^0.15.16",
+    "esbuild": "^0.19.6",
     "eslint": "^8.28.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^8.5.0",
