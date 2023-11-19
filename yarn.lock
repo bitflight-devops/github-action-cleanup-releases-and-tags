@@ -1466,7 +1466,7 @@ __metadata:
     "@jest/globals": ^29.3.1
     "@jest/types": ^29.3.1
     "@octokit/core": ^4.1.0
-    "@octokit/types": ^8.0.0
+    "@octokit/types": ^12.3.0
     "@octokit/webhooks-definitions": ^3.67.3
     "@octokit/webhooks-types": ^6.7.0
     "@tsconfig/node16-strictest": ^1.0.4
@@ -2608,6 +2608,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@octokit/openapi-types@npm:^19.0.2":
+  version: 19.0.2
+  resolution: "@octokit/openapi-types@npm:19.0.2"
+  checksum: 2a5d577a21674be1e004f081e973a5c68ec945063d0ff29b41f67a535a69d97f7f9ce084e313d922a815f0c361763664a43a650bf6e520548892dd2f192b88da
+  languageName: node
+  linkType: hard
+
 "@octokit/plugin-paginate-rest@npm:5.0.1, @octokit/plugin-paginate-rest@npm:^5.0.0":
   version: 5.0.1
   resolution: "@octokit/plugin-paginate-rest@npm:5.0.1"
@@ -2743,6 +2750,15 @@ __metadata:
   dependencies:
     "@octokit/openapi-types": ^14.0.0
   checksum: 1a0197b2c4c522ac90f145e02b3f8cb048a47f71c2c6bdbf021a03db7dd30ca92a899c0186acb401337f218efe44e60d33cc1cc68715b622bb75bc1a4e79515d
+  languageName: node
+  linkType: hard
+
+"@octokit/types@npm:^12.3.0":
+  version: 12.3.0
+  resolution: "@octokit/types@npm:12.3.0"
+  dependencies:
+    "@octokit/openapi-types": ^19.0.2
+  checksum: ba852690b7dcdf0d01e68b2dba79b1823322406493bfb769964e07b0ee47005d58a0241e401afb6e03f0ab51ecd7a739d6d3e4d0cc1db8b7606c36c8a2104e67
   languageName: node
   linkType: hard
 
