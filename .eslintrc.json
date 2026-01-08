@@ -8,7 +8,8 @@
     "@typescript-eslint",
     "optimize-regex",
     "promise",
-    "node"
+    "n",
+    "no-use-extend-native"
   ],
   "overrides": [
     {
@@ -20,7 +21,6 @@
       "files": ["*.ts", "*.tsx"],
       "extends": [
         "plugin:promise/recommended",
-        "plugin:no-use-extend-native/recommended",
         "plugin:jest/recommended",
         "eslint:recommended",
         "plugin:@typescript-eslint/recommended",
@@ -60,14 +60,14 @@
         "unicorn/consistent-destructuring": "off",
         "@typescript-eslint/no-unsafe-member-access": "off",
         "@typescript-eslint/no-unsafe-call": "off",
-        "node/no-missing-import": "off",
-        "node/no-empty-function": "off",
-        "node/no-unsupported-features/es-syntax": "off",
-        "node/no-missing-require": "off",
-        "node/shebang": "off",
+        "n/no-missing-import": "off",
+        "n/no-empty-function": "off",
+        "n/no-unsupported-features/es-syntax": "off",
+        "n/no-missing-require": "off",
+        "n/shebang": "off",
         "no-use-before-define": "off",
         "@typescript-eslint/no-use-before-define": "off",
-        "node/no-unpublished-import": "off",
+        "n/no-unpublished-import": "off",
         "@typescript-eslint/no-unsafe-assignment": "off",
         "@typescript-eslint/no-var-requires": "off",
         "@typescript-eslint/ban-ts-comment": "off",
@@ -90,8 +90,6 @@
           }
         ],
         "import/no-unresolved": "error",
-        "@typescript-eslint/func-call-spacing": ["error", "never"],
-        "@typescript-eslint/lines-between-class-members": ["error"],
         "@typescript-eslint/no-require-imports": "error",
         "@typescript-eslint/no-unnecessary-qualifier": "error",
         "@typescript-eslint/no-unnecessary-type-assertion": "error",
@@ -110,10 +108,8 @@
         "@typescript-eslint/require-array-sort-compare": "error",
         "@typescript-eslint/restrict-plus-operands": "error",
         "@typescript-eslint/restrict-template-expressions": "off",
-        "@typescript-eslint/semi": ["error", "always"],
 
         "@typescript-eslint/strict-boolean-expressions": "off",
-        "@typescript-eslint/type-annotation-spacing": "error",
         "@typescript-eslint/unbound-method": "error",
         "no-return-await": "off",
         "@typescript-eslint/return-await": "warn",
