@@ -7,8 +7,15 @@
   "repository": "git@github.com:Broadshield/github-action-cleanup-releases-and-tags.git",
   "author": "Jamie Nelson <jamie@wearsafe.com>",
   "license": "MIT",
-  "keywords": ["GitHub", "Actions", "JavaScript"],
-  "files": ["dist", "action.yml"],
+  "keywords": [
+    "GitHub",
+    "Actions",
+    "JavaScript"
+  ],
+  "files": [
+    "dist",
+    "action.yml"
+  ],
   "private": true,
   "engines": {
     "node": ">=16.18.1"
