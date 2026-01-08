@@ -61,7 +61,7 @@ yarn format:all
 yarn lint
 ```
 
-**Known Issue**: Currently fails with TypeScript parsing errors due to deprecated `originalKeywordKind` usage in TypeScript 5.2.2. This is a known issue with the `@typescript-eslint/parser` and TypeScript version mismatch. The lint errors do NOT prevent the build from working.
+**Known Issue**: Currently fails with TypeScript parsing errors due to deprecated `originalKeywordKind` usage. This is a known issue with the `@typescript-eslint/parser` version (set to 'latest') and TypeScript ~5.2.2. The lint errors do NOT prevent the build from working.
 
 **Type check:**
 
@@ -206,7 +206,7 @@ After making changes:
 3. **ALWAYS commit the dist/ directory** - GitHub Actions require the bundled output
 4. **Do NOT try to fix the ESLint parsing errors** - this is a known issue with the TypeScript version and requires updating multiple dependencies
 5. **Do NOT remove or modify the pre-commit hook** - it ensures dist/ is always up to date
-6. **Node version**: The action runs on Node.js 20 (per action.yml), but development uses Node.js >=16.18.1
+6. **Node version**: The action runs on Node.js 20 (per action.yml). Development requires Node.js >=16.18.1 (per package.json engines), but Node.js 20 is recommended to match the runtime environment
 7. **Format TypeScript with Prettier**: 2 spaces, single quotes, semicolons, trailing commas
 8. **Test changes**: Run `yarn test && yarn build` to validate - this is what the pre-commit hook runs
 9. **Yarn 3 (Berry)**: This repo uses Yarn 3.3.0 with Plug'n'Play - DO NOT use npm or yarn 1.x commands
