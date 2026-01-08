@@ -5,10 +5,10 @@
 This is a **GitHub Action** that removes releases and tags based on pattern matching. It is primarily used to clean up unused tags and releases created during the PR process. The action is written in TypeScript and compiled to a single CommonJS bundle for Node.js 20 runtime.
 
 **Project Type**: GitHub Action  
-**Language**: TypeScript (Node.js >=16.18.1, runtime: Node.js 20)  
+**Language**: TypeScript (Node.js >=20.0.0, runtime: Node.js 20)  
 **Package Manager**: Yarn 3.3.0 (Berry)  
-**Build Tool**: esbuild  
-**Test Framework**: Jest with ts-jest  
+**Build Tool**: esbuild (targeting node20)  
+**Test Framework**: Jest 30 with ts-jest  
 **Size**: Small (~87 lines of source code in 2 TypeScript files)
 
 ## Build and Validation Instructions
@@ -21,7 +21,7 @@ This is a **GitHub Action** that removes releases and tags based on pattern matc
 yarn install
 ```
 
-**Expected**: Takes ~60-90 seconds. Warnings about peer dependencies are normal and can be ignored.
+**Expected**: Takes ~60-90 seconds. Peer dependency warnings are normal and safe to ignore.
 
 ### Build Process
 
@@ -42,8 +42,8 @@ yarn build
 yarn test
 ```
 
-**Expected**: Completes in ~3 seconds. 1 test suite, 1 passing test.  
-**Note**: Tests use Jest with NODE_ENV=testing.
+**Expected**: Completes in ~0.5 seconds. 1 test suite, 1 passing test.  
+**Note**: Tests use Jest 30 with NODE_ENV=testing.
 
 ### Linting and Formatting
 
@@ -61,7 +61,8 @@ yarn format:all
 yarn lint
 ```
 
-**Known Issue**: Currently fails with TypeScript parsing errors due to deprecated `originalKeywordKind` usage. This is a known issue with the `@typescript-eslint/parser` version (set to 'latest') and TypeScript ~5.2.2. The lint errors do NOT prevent the build from working.
+**Expected**: Completes successfully with no errors. ESLint 8.57 with TypeScript 5.9.3.  
+**Note**: All deprecated rules have been removed or updated. The project uses ESLint 8 for compatibility with all plugins.
 
 **Type check:**
 
@@ -69,7 +70,7 @@ yarn lint
 yarn typecheck
 ```
 
-**Known Issue**: Shows deprecation warning about `importsNotUsedAsValues` option. This is from the `@tsconfig/node16-strictest` preset and can be ignored. Exit code 2 is expected currently.
+**Expected**: Completes with no errors or warnings. TypeScript 5.9.3 with @tsconfig/node20 and @tsconfig/strictest.
 
 ### Pre-commit Hooks
 
@@ -108,7 +109,7 @@ npx lint-staged
 ├── action.yml               # GitHub Action metadata
 ├── package.json             # Dependencies and scripts
 ├── tsconfig.json            # TypeScript config (extends tsconfig.base.json)
-├── tsconfig.base.json       # Base TS config (extends @tsconfig/node16-strictest)
+├── tsconfig.base.json       # Base TS config (extends @tsconfig/node20 + @tsconfig/strictest)
 ├── jest.config.js           # Jest configuration (ts-jest preset)
 ├── .eslintrc.json           # ESLint rules (extensive TypeScript rules)
 ├── .prettierrc.cjs          # Prettier formatting rules
@@ -119,9 +120,9 @@ npx lint-staged
 ### Key Configuration Files
 
 - **action.yml**: Defines action inputs (pr_number, branch, repository, regex, github_token) and runs using Node.js 20 with `dist/index.cjs`
-- **tsconfig.json**: Extends `@tsconfig/node16-strictest`, targets Node 16+, outputs to `lib/` (unused, esbuild outputs to `dist/`)
-- **package.json**: Main entry is `dist/index.cjs`, engines require Node >=16.18.1
-- **.eslintrc.json**: Complex config with TypeScript, Jest, Airbnb, SonarJS, and Unicorn plugins
+- **tsconfig.json**: Extends `@tsconfig/node20` and `@tsconfig/strictest`, targets Node 20+, outputs to `lib/` (unused, esbuild outputs to `dist/`)
+- **package.json**: Main entry is `dist/index.cjs`, engines require Node >=20.0.0, uses TypeScript 5.9.3
+- **.eslintrc.json**: ESLint 8.57 config with TypeScript 8.52, Jest, Airbnb, SonarJS, and Unicorn plugins
 - **.prettierrc.cjs**: 2-space indent, single quotes, semicolons, 120 char width for TypeScript
 
 ### Source Code Overview
@@ -138,13 +139,14 @@ npx lint-staged
 
 ### Dependencies
 
-**Runtime Dependencies** (3 Broadshield packages):
+**Runtime Dependencies** (4 packages):
 
 - `@broadshield/github-actions-core-typed-inputs`: Core GitHub Actions utilities
 - `@broadshield/github-actions-octokit-hydrated`: Octokit wrapper
 - `@broadshield/github-actions-workflow-marie-kondo`: Release/tag cleanup utility
+- `tslib`: TypeScript runtime helpers (2.8.1)
 
-**Dev Dependencies**: TypeScript, ESLint (extensive plugins), Jest, esbuild, Prettier, Husky, lint-staged
+**Dev Dependencies**: All updated to Jan 2026 versions - TypeScript 5.9.3, ESLint 8.57, @typescript-eslint 8.52, Jest 30, esbuild 0.27, and more
 
 ## CI/CD and Validation
 
@@ -179,38 +181,25 @@ After making changes:
 
 ## Known Issues and Workarounds
 
-### TypeScript/ESLint Parsing Errors
-
-**Issue**: `yarn lint` fails with "DeprecationError: 'originalKeywordKind' has been deprecated"  
-**Cause**: Mismatch between TypeScript 5.2.2 and `@typescript-eslint/parser`  
-**Impact**: Linting cannot verify code correctness, but build and tests work  
-**Workaround**: Rely on `yarn test` and `yarn build` for validation. Do not use `yarn lint` exit code as a gate.
-
-### TypeScript Deprecation Warning
-
-**Issue**: `yarn typecheck` shows "Option 'importsNotUsedAsValues' is deprecated"  
-**Cause**: `@tsconfig/node16-strictest` preset uses deprecated option  
-**Impact**: Warning only, type checking still works  
-**Workaround**: Ignore the warning. Exit code 2 is expected.
-
 ### Yarn Peer Dependency Warnings
 
-**Issue**: Warnings about inquirer and prettier peer dependencies during `yarn install`  
-**Impact**: None - packages function correctly  
-**Workaround**: Ignore warnings.
+**Issue**: Warnings about peer dependencies during `yarn install`  
+**Impact**: None - packages function correctly despite warnings  
+**Workaround**: Safe to ignore. These are expected with the current package versions.
 
 ## Important Notes for Coding Agents
 
 1. **ALWAYS run `yarn install` before any build/test commands** if node_modules or .yarn/cache are missing
 2. **ALWAYS run `yarn build` after modifying TypeScript files** - the dist/ output is required for the action to work
 3. **ALWAYS commit the dist/ directory** - GitHub Actions require the bundled output
-4. **Do NOT try to fix the ESLint parsing errors** - this is a known issue with the TypeScript version and requires updating multiple dependencies
-5. **Do NOT remove or modify the pre-commit hook** - it ensures dist/ is always up to date
-6. **Node version**: The action runs on Node.js 20 (per action.yml). Development requires Node.js >=16.18.1 (per package.json engines), but Node.js 20 is recommended to match the runtime environment
+4. **Do NOT remove or modify the pre-commit hook** - it ensures dist/ is always up to date
+5. **Node version**: The action runs on Node.js 20 (per action.yml). Development requires Node.js >=20.0.0. Use Node.js 20.19.6 or later.
+6. **TypeScript**: Uses TypeScript 5.9.3 with @typescript-eslint 8.52 - all deprecated rules have been removed
 7. **Format TypeScript with Prettier**: 2 spaces, single quotes, semicolons, trailing commas
 8. **Test changes**: Run `yarn test && yarn build` to validate - this is what the pre-commit hook runs
 9. **Yarn 3 (Berry)**: This repo uses Yarn 3.3.0 with Plug'n'Play - DO NOT use npm or yarn 1.x commands
 10. **Main branch protection**: Changes go through PRs - the cleanup workflow runs on PR close
+11. **Deprecated packages replaced**: `eslint-plugin-node` → `eslint-plugin-n` (Jan 2026 updates)
 
 ## Quick Reference Commands
 
@@ -222,10 +211,10 @@ yarn install && yarn test && yarn build
 yarn format:all
 
 # Individual commands
-yarn test          # Run Jest tests (~3s)
-yarn build         # Build with esbuild (~300ms)
-yarn typecheck     # TypeScript check (expect warning)
-yarn lint          # ESLint (currently broken)
+yarn test          # Run Jest 30 tests (~0.5s)
+yarn build         # Build with esbuild (~300ms, targets node20)
+yarn typecheck     # TypeScript 5.9 check (no errors/warnings)
+yarn lint          # ESLint 8.57 (all deprecated rules removed)
 ```
 
 **Trust these instructions.** Only search for additional information if these instructions are incomplete or incorrect for your specific task.
